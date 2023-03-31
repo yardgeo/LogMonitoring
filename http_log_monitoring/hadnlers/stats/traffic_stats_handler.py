@@ -1,37 +1,58 @@
-import asyncio
+from asyncio import Queue
 from collections import deque
 from datetime import datetime
 
-from dto import LogLineDto
+from consumers import CommonConsumer
+from dto import LogLineDto, NotificationDto, NotificationLevelDto
 
 from hadnlers import LogLineHandler
 from config import Config
+from hadnlers.stats import TrafficStatsHandlerState
 
 
 class TrafficStatsHandler(LogLineHandler):
-    def __init__(self, message_queue: asyncio.Queue):
-        super().__init__(message_queue)
 
-        # queue for last {time} logs
-        self._log_queue = deque()
+    def __init__(self,
+                 consumer: CommonConsumer,
+                 log_handler_queue: Queue):
+        super().__init__(log_handler_queue=log_handler_queue, consumer=consumer)
 
-    async def handle(self, log_line: LogLineDto) -> None:
-        # remove all elements from queue which are older than alert range
-        while len(self._log_queue) > 0 and self._log_queue[0] < log_line.unix_time - Config.HIGH_TRAFFIC_TIME_INTERVAL:
-            self._log_queue.popleft()
+        self._next_notification_unix_time = 0
 
-        # append current log time
-        self._log_queue.append(log_line.unix_time)
+        self._state = TrafficStatsHandlerState()
 
-        # check if should trigger
-        if len(self._log_queue) > Config.HIGH_TRAFFIC_MAX_REQUESTS_PER_SECOND * Config.HIGH_TRAFFIC_TIME_INTERVAL:
-            await self.message_queue.put(
-                Config.HIGH_TRAFFIC_ALERT_MESSAGE.format(
-                    time=datetime.utcfromtimestamp(log_line.unix_time).strftime(Config.DATETIME_FORMAT),
-                    value=len(self._log_queue)
+    async def consume(self, log_line: LogLineDto) -> None:
+        # check if interval is finished
+        if self._next_notification_unix_time < log_line.unix_time:
+            #  send notification if state is not empty
+            if 0 < self._next_notification_unix_time:
+                await self._send_stats_notification(self._next_notification_unix_time)
+
+            # clear stats state and update notification time
+            self._clear_state(log_line.unix_time)
+
+        # update current stats state
+        self._update_state(log_line)
+
+    def _clear_state(self, current_unix_time: int) -> None:
+        # update next notification time
+        self._next_notification_unix_time = current_unix_time + Config.TRAFFIC_STATS_TIME_INTERVAL
+
+        # clear state
+        self._state.clear()
+
+    def _update_state(self, log_line: LogLineDto) -> None:
+        self._state.update(log_line)
+
+    async def _send_stats_notification(self, current_unix_time: int):
+        # send message to async queue so write can write the message
+        await self.consumer.consume_message(
+            NotificationDto(
+                level=NotificationLevelDto(Config.TRAFFIC_STATS_NOTIFICATION_LEVEL),
+                type=Config.TRAFFIC_STATS_NOTIFICATION_TYPE,
+                message=Config.TRAFFIC_STATS_NOTIFICATION_MESSAGE.format(
+                    time=datetime.utcfromtimestamp(current_unix_time).strftime(Config.DATETIME_FORMAT),
+                    stats=self._state.get_notification_message()
                 )
             )
-
-
-
-
+        )

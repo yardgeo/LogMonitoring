@@ -1,1 +1,1 @@
-from high_traffic_alert_handler import HighTrafficAlertHandler
+from .high_traffic_alert_handler import HighTrafficAlertHandler
