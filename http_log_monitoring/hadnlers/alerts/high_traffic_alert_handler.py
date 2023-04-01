@@ -3,7 +3,7 @@ from asyncio import Queue, Event
 from collections import deque
 from datetime import datetime
 
-from consumers import CommonConsumer
+from consumers import CommonNotificationConsumer
 from dto import LogLineDto, NotificationDto, NotificationLevelDto
 
 from hadnlers import LogLineHandler
@@ -12,9 +12,9 @@ from config import Config
 
 class HighTrafficAlertHandler(LogLineHandler):
     def __init__(self,
-                 consumer: CommonConsumer,
+                 notification_consumer: CommonNotificationConsumer,
                  log_handler_queue: Queue):
-        super().__init__(log_handler_queue=log_handler_queue, consumer=consumer)
+        super().__init__(log_handler_queue=log_handler_queue, notification_consumer=notification_consumer)
 
         # queue for last {time} logs
         self._log_queue = deque()
@@ -32,16 +32,15 @@ class HighTrafficAlertHandler(LogLineHandler):
 
         # check if traffic exceed the limit
         if not self._high_traffic and len(self._log_queue) > Config.HIGH_TRAFFIC_MAX_REQUESTS_PER_INTERVAL:
-            await self._send_high_traffic_message(log_line.unix_time)
+            await self._send_high_traffic_notification(log_line.unix_time)
 
         # check if traffic was high but now is returned to normal
         elif self._high_traffic and len(self._log_queue) <= Config.HIGH_TRAFFIC_MAX_REQUESTS_PER_INTERVAL:
-            await self._send_recovery_message(log_line.unix_time)
-        # await asyncio.sleep(2)
+            await self._send_recovery_notification(log_line.unix_time)
 
-    async def _send_high_traffic_message(self, current_unix_time: int):
+    async def _send_high_traffic_notification(self, current_unix_time: int):
         # send message to async queue so write can write the message
-        await self.consumer.consume_message(
+        await self.notification_consumer.consume_notification(
             NotificationDto(
                 level=NotificationLevelDto(Config.HIGH_TRAFFIC_ALERT_NOTIFICATION_LEVEL),
                 type=Config.HIGH_TRAFFIC_ALERT_NOTIFICATION_TYPE,
@@ -55,9 +54,9 @@ class HighTrafficAlertHandler(LogLineHandler):
         # set high traffic flag to True
         self._high_traffic = True
 
-    async def _send_recovery_message(self, current_unix_time: int):
+    async def _send_recovery_notification(self, current_unix_time: int):
         # send message to async queue so write can write the message
-        await self.consumer.consume_message(
+        await self.notification_consumer.consume_notification(
             NotificationDto(
                 level=NotificationLevelDto(Config.HIGH_TRAFFIC_RECOVERY_NOTIFICATION_LEVEL),
                 type=Config.HIGH_TRAFFIC_RECOVERY_NOTIFICATION_TYPE,

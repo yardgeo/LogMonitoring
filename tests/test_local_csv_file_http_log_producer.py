@@ -8,12 +8,21 @@ from producers import LocalCSVFileHttpLogProducer
 
 class TestLocalCSVFileHttpLogProducer(IsolatedAsyncioTestCase):
     def setUp(self) -> None:
-        self.file_path = "../data/sample_csv.txt"
+        self.file_path = "data/sample_csv.txt"
         self.producer = LocalCSVFileHttpLogProducer(self.file_path)
 
-    async def test_start(self):
-        r = await self.producer.start()
-        self.assertIsNone(r)
+    async def test_start_is_doing_nothing(self):
+        # get number of running tasks
+        num_of_running_tasks = len(asyncio.all_tasks())
+
+        # schedule the coroutine to run in the background
+        asyncio.create_task(self.producer.start())
+
+        # allow the task to run
+        await asyncio.sleep(0)
+
+        # check that number of running tasks wasn't changed
+        self.assertEqual(len(asyncio.all_tasks()), num_of_running_tasks)
 
 
 class TestOfflineFile(TestLocalCSVFileHttpLogProducer):
@@ -57,7 +66,7 @@ class TestOfflineFile(TestLocalCSVFileHttpLogProducer):
         except asyncio.TimeoutError:
             pass
 
-    async def test_log_stream_elements(self):
+    async def test_log_stream_elements_are_correct(self):
         # count actual length
         actual_logs = []
         with open(self.file_path) as fin:

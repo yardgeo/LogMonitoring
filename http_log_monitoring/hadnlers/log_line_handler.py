@@ -2,7 +2,7 @@ import asyncio
 from abc import ABC, abstractmethod
 from asyncio import Queue, Condition
 
-from consumers import CommonConsumer
+from consumers import CommonNotificationConsumer
 from dto import LogLineDto
 
 
@@ -10,8 +10,8 @@ class LogLineHandler(ABC):
 
     def __init__(self,
                  log_handler_queue: Queue,
-                 consumer: CommonConsumer):
-        self.consumer = consumer
+                 notification_consumer: CommonNotificationConsumer):
+        self.notification_consumer = notification_consumer
         self.log_handler_queue = log_handler_queue
 
     async def handle(self, log_line: LogLineDto) -> None:

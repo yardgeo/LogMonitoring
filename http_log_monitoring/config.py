@@ -7,7 +7,7 @@ class Config:
 
     # Local producers constants
     LOCAL_PRODUCER_QUEUE_MAX_SIZE = os.getenv("LOCAL_PRODUCER_QUEUE_MAX_SIZE", 20)
-    LOCAL_PRODUCER_SLEEP_TIME = os.getenv("LOCAL_PRODUCER_SLEEP_TIME", 0.1)  # when there are no new log lines
+    LOCAL_PRODUCER_ONLINE_SLEEP_TIME = os.getenv("LOCAL_PRODUCER_ONLINE_SLEEP_TIME", 0.1)  # wait for new line
     LOCAL_PRODUCER_DELIMITER = os.getenv("LOCAL_PRODUCER_DELIMITER", ",")
 
     # High traffic alert constants

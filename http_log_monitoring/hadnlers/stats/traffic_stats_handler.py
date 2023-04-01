@@ -1,8 +1,7 @@
 from asyncio import Queue
-from collections import deque
 from datetime import datetime
 
-from consumers import CommonConsumer
+from consumers import CommonNotificationConsumer
 from dto import LogLineDto, NotificationDto, NotificationLevelDto
 
 from hadnlers import LogLineHandler
@@ -13,9 +12,9 @@ from hadnlers.stats import TrafficStatsHandlerState
 class TrafficStatsHandler(LogLineHandler):
 
     def __init__(self,
-                 consumer: CommonConsumer,
+                 notification_consumer: CommonNotificationConsumer,
                  log_handler_queue: Queue):
-        super().__init__(log_handler_queue=log_handler_queue, consumer=consumer)
+        super().__init__(log_handler_queue=log_handler_queue, notification_consumer=notification_consumer)
 
         self._next_notification_unix_time = 0
 
@@ -46,7 +45,7 @@ class TrafficStatsHandler(LogLineHandler):
 
     async def _send_stats_notification(self, current_unix_time: int):
         # send message to async queue so write can write the message
-        await self.consumer.consume_message(
+        await self.notification_consumer.consume_notification(
             NotificationDto(
                 level=NotificationLevelDto(Config.TRAFFIC_STATS_NOTIFICATION_LEVEL),
                 type=Config.TRAFFIC_STATS_NOTIFICATION_TYPE,

@@ -1,3 +1,3 @@
-from .common_consumer import CommonConsumer
-from .console_consumer import ConsoleConsumer
+from .common_notification_consumer import CommonNotificationConsumer
+from .console_notification_consumer import ConsoleNotificationConsumer
 
