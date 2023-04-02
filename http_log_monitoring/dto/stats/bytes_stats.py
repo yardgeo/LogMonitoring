@@ -3,6 +3,10 @@ from dataclasses import dataclass
 
 @dataclass
 class BytesStatsDto:
+    """
+    A class to represent statistics related to bytes information of logs
+    """
+
     max_bytes: float = 0
     sum_bytes: float = 0
 

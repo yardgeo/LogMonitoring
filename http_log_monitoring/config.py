@@ -2,6 +2,9 @@ import os
 
 
 class Config:
+    """
+    A class to represent all constants of the module
+    """
     # Common constants
     DATETIME_FORMAT = os.getenv("DATETIME_FORMAT", '%Y-%m-%d %H:%M:%S')
 
@@ -9,6 +12,7 @@ class Config:
     LOCAL_PRODUCER_QUEUE_MAX_SIZE = os.getenv("LOCAL_PRODUCER_QUEUE_MAX_SIZE", 20)
     LOCAL_PRODUCER_ONLINE_SLEEP_TIME = os.getenv("LOCAL_PRODUCER_ONLINE_SLEEP_TIME", 0.1)  # wait for new line
     LOCAL_PRODUCER_DELIMITER = os.getenv("LOCAL_PRODUCER_DELIMITER", ",")
+    LOCAL_PRODUCER_FILEPATH = os.getenv("LOCAL_PRODUCER_FILEPATH", "data/sample_csv.txt")
 
     # High traffic alert constants
     HIGH_TRAFFIC_TIME_INTERVAL = os.getenv("HIGH_TRAFFIC_TIME_INTERVAL", 120)  # range in seconds

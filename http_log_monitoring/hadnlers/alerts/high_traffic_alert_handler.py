@@ -11,6 +11,9 @@ from config import Config
 
 
 class HighTrafficAlertHandler(LogLineHandler):
+    """
+    A class to represent a handler for high traffic notifications
+    """
     def __init__(self,
                  notification_consumer: CommonNotificationConsumer,
                  log_handler_queue: Queue):
@@ -23,7 +26,7 @@ class HighTrafficAlertHandler(LogLineHandler):
         self._high_traffic = False
 
     async def consume(self, log_line: LogLineDto) -> None:
-        # remove all elements from queue which are older than alert range
+        # remove all elements from the queue which are older than alert range
         while len(self._log_queue) > 0 and self._log_queue[0] < log_line.unix_time - Config.HIGH_TRAFFIC_TIME_INTERVAL:
             self._log_queue.popleft()
 

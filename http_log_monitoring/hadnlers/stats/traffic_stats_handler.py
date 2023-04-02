@@ -10,6 +10,9 @@ from hadnlers.stats import TrafficStatsHandlerState
 
 
 class TrafficStatsHandler(LogLineHandler):
+    """
+    A class to represent a handler for statistics notifications
+    """
 
     def __init__(self,
                  notification_consumer: CommonNotificationConsumer,

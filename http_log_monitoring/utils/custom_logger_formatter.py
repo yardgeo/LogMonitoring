@@ -2,6 +2,9 @@ import logging
 
 
 class CustomLoggerFormatter(logging.Formatter):
+    """
+    A class to represent custom logger formatter. Format message with a specific color based on level.
+    """
     grey = "\x1b[38;20m"
     yellow = "\x1b[33;20m"
     red = "\x1b[31;20m"

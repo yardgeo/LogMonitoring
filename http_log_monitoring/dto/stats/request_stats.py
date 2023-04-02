@@ -5,6 +5,10 @@ from collections import defaultdict
 
 @dataclass
 class RequestStatsDto:
+    """
+    A class to represent statistics related to request information of logs
+    """
+
     section_count_dict: Dict[str, int] = field(default_factory=lambda: defaultdict(int))
     method_count_dict: Dict[str, int] = field(default_factory=lambda: defaultdict(int))
 

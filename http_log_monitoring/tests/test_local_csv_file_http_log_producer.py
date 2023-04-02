@@ -2,13 +2,14 @@ import asyncio
 import csv
 from unittest import IsolatedAsyncioTestCase
 
+from config import Config
 from dto import LogLineDto
 from producers import LocalCSVFileHttpLogProducer
 
 
 class TestLocalCSVFileHttpLogProducer(IsolatedAsyncioTestCase):
     def setUp(self) -> None:
-        self.file_path = "data/sample_csv.txt"
+        self.file_path = Config.LOCAL_PRODUCER_FILEPATH
         self.producer = LocalCSVFileHttpLogProducer(self.file_path)
 
     async def test_start_is_doing_nothing(self):

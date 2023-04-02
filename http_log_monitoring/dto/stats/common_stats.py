@@ -1,4 +1,3 @@
-from abc import ABC
 from dataclasses import dataclass
 
 from .bytes_stats import BytesStatsDto
@@ -7,7 +6,11 @@ from .request_stats import RequestStatsDto
 
 
 @dataclass
-class CommonStatsDto(ABC):
+class CommonStatsDto:
+    """
+    A class to represent common statistics of logs
+    """
+
     bytes_stats_dto: BytesStatsDto = BytesStatsDto()
     status_stats_dto: StatusStatsDto = StatusStatsDto()
     request_stats_dto: RequestStatsDto = RequestStatsDto()

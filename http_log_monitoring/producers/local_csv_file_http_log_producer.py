@@ -1,16 +1,23 @@
 import asyncio
 import csv
+import logging
 from typing import AsyncIterable
 
 from config import Config
 from dto import LogLineDto
+from exceptions import LogLineParsingException
 from producers import HttpLogProducer
 
 
 class LocalCSVFileHttpLogProducer(HttpLogProducer):
+    """
+    A class to represent http log producer from a local csv file.
+    """
+
     def __init__(self,
                  file_path: str):
         self._file_path = file_path
+        self._logger = logging.getLogger()
 
     async def stream_logs(self) -> AsyncIterable[LogLineDto]:
         # open local file in read mode
@@ -32,7 +39,13 @@ class LocalCSVFileHttpLogProducer(HttpLogProducer):
                     continue
 
                 # yield next line
-                yield LogLineDto(**raw_log_dict)
+                try:
+                    yield LogLineDto(**raw_log_dict)
+                # catch parsing exceptions
+                except LogLineParsingException as exp:
+                    error_line = Config.LOCAL_PRODUCER_DELIMITER.join([str(v) for v in raw_log_dict.values()])
+                    self._logger.error(f"Parsing error for line {error_line}: {exp}")
+                    continue
 
                 # sleep 0 to handlers can proceed next line in background mode
                 await asyncio.sleep(0)
