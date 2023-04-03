@@ -87,6 +87,7 @@ Project structure is represented bellow.
 
 * data directory contains data files which are used by the program
 * docs directory contains documents and instruction of the project
+* http_log_monitoring/config.py contains all constants for the project
 * http_log_monitoring/tests directory contains unit tests for the project
 * http_log_monitoring/utils directory contains utils functions for the project
 * http_log_monitoring/dto directory contains Data Transfer Objects for the project

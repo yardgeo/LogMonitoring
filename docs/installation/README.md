@@ -18,14 +18,18 @@ cd LogMonitoring
 
 ## Run the program
 
-To run the program without Docker:
 To run the program with Docker **[preferable]**:
 ```bash
 chmod +x run_app_docker.sh
 ./run_app_docker.sh
 ```
+To run the program without Docker:
 ```bash
 python http_log_monitoring/main.py
+```
+It is possible to specify log file as a parameter:
+```bash
+python http_log_monitoring/main.py data/sample_csv.txt
 ```
 
 ## Test the program
