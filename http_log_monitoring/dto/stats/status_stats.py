@@ -4,7 +4,8 @@ from dataclasses import dataclass
 @dataclass
 class StatusStatsDto:
     """
-    A class to represent statistics related to request status information of logs
+    A class to represent statistics
+    related to request status information of logs
     """
 
     number_4xx: int = 0

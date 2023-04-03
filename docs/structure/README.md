@@ -1,6 +1,7 @@
 # Project structure
 
 Project structure is represented bellow.
+
 ```bash
 .
 ├── README.md
@@ -90,10 +91,12 @@ Project structure is represented bellow.
 * http_log_monitoring/config.py contains all constants for the project
 * http_log_monitoring/tests directory contains unit tests for the project
 * http_log_monitoring/utils directory contains utils functions for the project
-* http_log_monitoring/dto directory contains Data Transfer Objects for the project
-  * LogLineDto contains information about one line of the http log
-  * NotificationDro contains information about notification
-  * stats directory contains information about different statistical sections
-* http_log_monitoring/consumers directory contains Notification consumer classes
+* http_log_monitoring/dto directory contains Data Transfer Objects for the
+  project
+    * LogLineDto contains information about one line of the http log
+    * NotificationDro contains information about notification
+    * stats directory contains information about different statistical sections
+* http_log_monitoring/consumers directory contains Notification consumer
+  classes
 * http_log_monitoring/producers directory contains Log Line producer classes
 * http_log_monitoring/handlers directory contains Log Line handler classes

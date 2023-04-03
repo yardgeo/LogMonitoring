@@ -1,4 +1,4 @@
-FROM python:3.8
+FROM python:3.11
 
 RUN mkdir -p /usr/src/monitoring
 WORKDIR /usr/src/monitoring

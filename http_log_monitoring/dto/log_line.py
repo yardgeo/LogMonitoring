@@ -22,7 +22,8 @@ class LogLineDto:
 
     def __post_init__(self):
         """
-        Post init logic. Include fields validation and post init fields creation
+        Post init logic.
+        Include fields validation and post init fields creation
         """
         # validate types
         for self_field in fields(self):
@@ -35,11 +36,15 @@ class LogLineDto:
 
             # check if none
             if field_value is None:
-                raise LogLineParsingException(f"{self_field.name} attribute is missing")
+                raise LogLineParsingException(
+                    f"{self_field.name} attribute is missing"
+                )
 
             # check type
             if not isinstance(field_value, self_field.type):
-                raise LogLineParsingException(f"Invalid type for {self_field.name}")
+                raise LogLineParsingException(
+                    f"Invalid type for {self_field.name}"
+                )
 
         # parse request variables
         try:

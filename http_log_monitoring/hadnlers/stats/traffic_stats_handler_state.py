@@ -29,7 +29,8 @@ class TrafficStatsHandlerState:
         self._update_status_stats(log_line.status_code)
 
         # update stats for request info
-        self._update_request_stats(method=log_line.http_method, section=log_line.web_site_section)
+        self._update_request_stats(method=log_line.http_method,
+                                   section=log_line.web_site_section)
 
     def get_notification_message(self) -> str:
         """
@@ -41,7 +42,10 @@ class TrafficStatsHandlerState:
 
     def _update_bytes_stats(self, bytes_v: float) -> None:
         # update maximum
-        self._common_stats.bytes_stats_dto.max_bytes = max(self._common_stats.bytes_stats_dto.max_bytes, bytes_v)
+        self._common_stats.bytes_stats_dto.max_bytes = max(
+            self._common_stats.bytes_stats_dto.max_bytes,
+            bytes_v
+        )
 
         # update sum
         self._common_stats.bytes_stats_dto.sum_bytes += bytes_v

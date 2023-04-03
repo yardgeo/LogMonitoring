@@ -9,9 +9,11 @@ class CommonNotificationConsumer(ABC):
     """
 
     @abstractmethod
-    async def consume_notification(self, notification: NotificationDto) -> None:
+    async def consume_notification(self,
+                                   notification: NotificationDto) -> None:
         """
-        Consume and process notification data for notification, visualization or logging pipelines
+        Consume and process notification data for notification,
+        visualization or logging pipelines
         :param notification: notification object
         :type notification: NotificationDto
         """

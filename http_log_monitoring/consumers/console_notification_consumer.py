@@ -2,14 +2,16 @@ import logging
 import sys
 
 from consumers import CommonNotificationConsumer
-from utils import CustomLoggerFormatter
 from dto import NotificationDto, NotificationLevelDto
+from utils import CustomLoggerFormatter
 
 
 class ConsoleNotificationConsumer(CommonNotificationConsumer):
     """
-    A class to represent Console notification consumer. Consumer process notification and log it to standard console.
+    A class to represent Console notification consumer.
+    Consumer process notification and log it to standard console.
     """
+
     def __init__(self):
         # configure console output format
         self._logger = logging.getLogger()
@@ -23,7 +25,8 @@ class ConsoleNotificationConsumer(CommonNotificationConsumer):
         # set handler
         self._logger.addHandler(handler)
 
-    async def consume_notification(self, notification: NotificationDto) -> None:
+    async def consume_notification(self,
+                                   notification: NotificationDto) -> None:
         # logging info
         if notification.level == NotificationLevelDto.INFO:
             self._logger.info(notification.message)

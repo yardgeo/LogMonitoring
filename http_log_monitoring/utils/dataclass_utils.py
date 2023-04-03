@@ -5,8 +5,10 @@ from typing import Any
 
 def reset_all_to_defaults(dataclass_inst: Any) -> None:
     """
-    Reset all dataclass variables to defaults. if a field of the class is dataclass object, recursion call is made.
-    Otherwise reset each field to default. Field types that acceptable: Dataclass, DefaultDict, primitives.
+    Reset all dataclass variables to defaults.
+    if a field of the class is dataclass object, recursion call is made.
+    Otherwise reset each field to default.
+    Field types that acceptable: Dataclass, DefaultDict, primitives.
     :param dataclass_inst: dataclass object
     :type dataclass_inst: Any
     """

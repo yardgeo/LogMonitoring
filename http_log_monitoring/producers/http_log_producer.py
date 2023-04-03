@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Iterable, AsyncIterable
+from typing import AsyncIterable
 
 from dto import LogLineDto
 
@@ -8,6 +8,7 @@ class HttpLogProducer(ABC):
     """
     A class to represent http log producer from a specific source.
     """
+
     @abstractmethod
     async def stream_logs(self) -> AsyncIterable[LogLineDto]:
         """

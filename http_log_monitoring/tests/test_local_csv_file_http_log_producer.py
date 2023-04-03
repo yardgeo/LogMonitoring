@@ -1,6 +1,6 @@
 import asyncio
 import csv
-from unittest import IsolatedAsyncioTestCase
+from unittest import IsolatedAsyncioTestCase, skipIf
 
 from config import Config
 from dto import LogLineDto
@@ -26,7 +26,9 @@ class TestLocalCSVFileHttpLogProducer(IsolatedAsyncioTestCase):
         self.assertEqual(len(asyncio.all_tasks()), num_of_running_tasks)
 
 
-class TestOfflineFile(TestLocalCSVFileHttpLogProducer):
+@skipIf(Config.LOCAL_PRODUCER_OFFLINE_MODE,
+        "TestCase can be applied only for online producers")
+class TestOnlineFile(TestLocalCSVFileHttpLogProducer):
 
     async def test_log_stream_length_less_than_actual(self):
         # count actual length
@@ -83,3 +85,16 @@ class TestOfflineFile(TestLocalCSVFileHttpLogProducer):
             i += 1
             if i == len(actual_logs):
                 break
+
+
+@skipIf(not Config.LOCAL_PRODUCER_OFFLINE_MODE,
+        "TestCase can be applied only for offline producers")
+class TestOfflineFile(TestLocalCSVFileHttpLogProducer):
+
+    async def test_log_stream_is_not_none(self):
+        gen = self.producer.stream_logs()
+        self.assertIsNotNone(gen)
+
+    async def test_log_stream_is_finite(self):
+        n = sum([1 async for _ in self.producer.stream_logs()])
+        self.assertGreater(n, 0)

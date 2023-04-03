@@ -1,8 +1,8 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from .bytes_stats import BytesStatsDto
-from .status_stats import StatusStatsDto
 from .request_stats import RequestStatsDto
+from .status_stats import StatusStatsDto
 
 
 @dataclass
@@ -11,9 +11,9 @@ class CommonStatsDto:
     A class to represent common statistics of logs
     """
 
-    bytes_stats_dto: BytesStatsDto = BytesStatsDto()
-    status_stats_dto: StatusStatsDto = StatusStatsDto()
-    request_stats_dto: RequestStatsDto = RequestStatsDto()
+    bytes_stats_dto: BytesStatsDto = field(default_factory=BytesStatsDto)
+    status_stats_dto: StatusStatsDto = field(default_factory=StatusStatsDto)
+    request_stats_dto: RequestStatsDto = field(default_factory=RequestStatsDto)
 
     def __str__(self):
         return f"Requests statistic:\n{str(self.request_stats_dto)}\n" \
